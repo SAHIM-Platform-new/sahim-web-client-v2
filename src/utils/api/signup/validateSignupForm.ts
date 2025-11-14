@@ -67,7 +67,7 @@ export const validateSignupForm = (values: Partial<SignupFormData>) => {
     errors.password = RESPONSE_MESSAGES.signup.VALIDATIONS.PASSWORD_LOWERCASE;
   } else if (!/[0-9]/.test(values.password)) {
     errors.password = RESPONSE_MESSAGES.signup.VALIDATIONS.PASSWORD_NUMBER;
-  } else if (!/[@$!%*?&]/.test(values.password)) {
+  } else if (!/[@$!%*?&_\\-~`#]/.test(values.password)) {
     errors.password = RESPONSE_MESSAGES.signup.VALIDATIONS.PASSWORD_SPECIAL;
   }
 
@@ -83,6 +83,16 @@ export const validateSignupForm = (values: Partial<SignupFormData>) => {
     errors.department = RESPONSE_MESSAGES.signup.VALIDATIONS.DEPARTMENT_REQUIRED;
   } else if (!(values.department in Department)) {
     errors.department = RESPONSE_MESSAGES.signup.VALIDATIONS.DEPARTMENT_INVALID;
+  }
+
+  // Study level validation
+  if (!values.studyLevel) {
+    errors.studyLevel = RESPONSE_MESSAGES.signup.VALIDATIONS.STUDY_LEVEL_REQUIRED;
+  } else {
+    const level = Number(values.studyLevel);
+    if (isNaN(level) || level < 1 || level > 5) {
+      errors.studyLevel = RESPONSE_MESSAGES.signup.VALIDATIONS.STUDY_LEVEL_INVALID;
+    }
   }
 
   // Study level validation

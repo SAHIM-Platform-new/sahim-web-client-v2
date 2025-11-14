@@ -13,9 +13,7 @@ async function signupService(data: SignupFormData): Promise<AuthResult> {
       ...((!data.authMethod || data.authMethod === AuthMethod.EMAIL_PASSWORD) && { 
         password: data.password 
       }),
-      ...((data.authMethod === AuthMethod.OAUTH_GOOGLE) && {
-        email: data.email
-      }),
+      email: data.email,
       name: data.name.trim(),
       authMethod: data.authMethod,
       academicNumber: data.academicNumber,

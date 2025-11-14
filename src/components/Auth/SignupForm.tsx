@@ -17,7 +17,7 @@ const steps = [
   {
     title: "المعلومات الشخصية",
     description: "أدخل معلوماتك الشخصية الأساسية",
-    fields: ['name', 'username']
+    fields: ['name', 'username', 'email']
   },
   {
     title: "كلمة المرور",
@@ -117,7 +117,14 @@ const SignupForm = () => {
             [field]: result.error?.message || ''
           }), {}));
         }
-        setFormError(result.error?.message || "حدث خطأ أثناء إنشاء الحساب");
+        if (Array.isArray(result.error?.message)) {
+          const messages = result.error.message.flatMap(err =>
+            err.constraints ? Object.values(err.constraints) : [err]
+          );
+          setFormError(messages.join(', '));
+        } else {
+          setFormError(result.error?.message || "حدث خطأ أثناء إنشاء الحساب");
+        }
       }
     } catch (error) {
       console.error("Signup error:", error);
@@ -167,6 +174,17 @@ const SignupForm = () => {
               onKeyDown={handleKeyDown}
               error={errors.username}
               startIcon={<User className="w-[18px] h-[18px]" />}
+            />
+            <Input
+              type="email"
+              placeholder="البريد الإلكتروني"
+              label="البريد الإلكتروني"
+              required
+              value={formData.email || ''}
+              onChange={(e) => handleChange('email', e.target.value)}
+              onKeyDown={handleKeyDown}
+              error={errors.email}
+              startIcon={<User className="w-[18px] h-[18px]" />} 
             />
           </div>
         );
